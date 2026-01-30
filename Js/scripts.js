@@ -91,7 +91,8 @@ openCloseGenerateButton.addEventListener("click", () => {
 
 });
 
-copypasswordButton.addEventListener("click",() =>{
+copypasswordButton.addEventListener("click",(e) =>{
+    e.preventDefault();
     const password = generatedPasswordElement.querySelector("h4").innerText;
 
     navigator.clipboard.writeText(password).then(() =>{
