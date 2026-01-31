@@ -1,106 +1,107 @@
-// Seleção de Elementos
+// Seleção de Elementos//P.E.G.N
 const generatePasswordButton = document.querySelector("#generate-password");
 const generatedPasswordElement = document.querySelector("#generated-password");
 
-// Novas funcionalidades
-const openCloseGeneratorButton = document.querySelector(
-  "#open-generate-password"
-);
+// Novas funcionaldade 
+const openCloseGenerateButton = document.querySelector("#open-generate-password");
+
 const generatePasswordContainer = document.querySelector("#generate-options");
 const lengthInput = document.querySelector("#length");
 const lettersInput = document.querySelector("#letters");
 const numbersInput = document.querySelector("#numbers");
 const symbolsInput = document.querySelector("#symbols");
-const copyPasswordButton = document.querySelector("#copy-password");
+const copypasswordButton = document.querySelector("#copy-password");
 
-// Funções
+
+//Funções
+
+//Letras , Númenos e Simbolos
+
 const getLetterLowerCase = () => {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    return String.fromCharCode(Math.floor(Math.random() *26) +97);
 };
 
-const getLetterUpperCase = () => {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+const getLetterUpperCase  = () => {
+    return String.fromCharCode(Math.floor(Math.random() *26) +65);
 };
 
-const getNumber = () => {
-  return Math.floor(Math.random() * 10).toString();
+const getNumber   = () => {
+    return Math.floor(Math.random() *10).toString();
 };
 
-const getSymbol = () => {
-  const symbols = "(){}[]=<>/,.!@#$%&*+-";
-  return symbols[Math.floor(Math.random() * symbols.length)];
+const getSymbol  = () => {
+    const symbols = "(){}[]=<>/,.!@#$%&*+-";    
+    return symbols[Math.floor(Math.random() * symbols.length)];
 };
 
-const generatePassword = (
-  getLetterLowerCase,
-  getLetterUpperCase,
-  getNumber,
-  getSymbol
-) => {
-  let password = "";
+const generatePassword = (getLetterLowerCase, getLetterUpperCase, getNumber, getSymbol) => {
+    let password = ""
+    
+    const passwordLength = +lengthInput.value;
 
-  //   Segunda versão
-  const passwordLength = +lengthInput.value;
+    const generators = [];
 
-  const generators = [];
+    if(lettersInput.checked){
+        generators.push(getLetterLowerCase,getLetterUpperCase)
+    }
 
-  if (lettersInput.checked) {
-    generators.push(getLetterLowerCase, getLetterUpperCase);
-  }
+    if(numbersInput.checked){
+        generators.push(getNumber);
+    }
 
-  if (numbersInput.checked) {
-    generators.push(getNumber);
-  }
+    if(symbolsInput.checked){
+        generators.push(getSymbol);
+    }
 
-  if (symbolsInput.checked) {
-    generators.push(getSymbol);
-  }
 
-  console.log(generators.length);
+console.log(generators.length);
 
-  if (generators.length === 0) {
-    return;
-  }
+if (generators.length === 0 ) {
+    return
+}
+    for (i = 0; i < passwordLength; i = i + generators.length) {
+        generators.forEach(() =>{
+            const randomValue =
+            generators[Math.floor(Math.random() * generators.length)]();
+            
+            password += randomValue;
 
-  for (i = 0; i < passwordLength; i = i + generators.length) {
-    generators.forEach(() => {
-      const randomValue =
-        generators[Math.floor(Math.random() * generators.length)]();
+        });        
+    }
+    password = password.slice(0,passwordLength);
+    console.log(password);
 
-      password += randomValue;
-    });
-  }
+    generatedPasswordElement.style.display = "block";
+    
+    generatedPasswordElement.querySelector("h4").innerText = password;
+}
 
-  password = password.slice(0, passwordLength);
+//Eventos
 
-  generatedPasswordElement.style.display = "block";
-  generatedPasswordElement.querySelector("h4").innerText = password;
-};
-
-// Eventos
 generatePasswordButton.addEventListener("click", () => {
-  generatePassword(
+    generatePassword(
     getLetterLowerCase,
     getLetterUpperCase,
     getNumber,
-    getSymbol
-  );
+    getSymbol)
 });
 
-openCloseGeneratorButton.addEventListener("click", () => {
-  generatePasswordContainer.classList.toggle("hide");
+openCloseGenerateButton.addEventListener("click", () => {
+    generatePasswordContainer.classList.toggle("hide");
+
 });
 
-copyPasswordButton.addEventListener("click", (e) => {
-  e.preventDefault();
+copypasswordButton.addEventListener("click",(e) =>{
+    e.preventDefault();
+    const password = generatedPasswordElement.querySelector("h4").innerText;
 
-  const password = generatedPasswordElement.querySelector("h4").innerText;
+    navigator.clipboard.writeText(password).then(() =>{
+        copypasswordButton.innerText = "senha copiadacom sucesso";
 
-  navigator.clipboard.writeText(password).then(() => {
-    copyPasswordButton.innerText = "Senha copiada com sucesso!";
+        setTimeout(() => {
+            copypasswordButton.innerText="Copiar"
+        }, 1000);
+    })
 
-    setTimeout(() => {
-      copyPasswordButton.innerText = "Copiar";
-    }, 1000);
-  });
+
 });
